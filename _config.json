@@ -1,5 +1,6 @@
 {
-  "infuraKey": "https://kovan.infura.io/v3/6330b77953574875a6f2ae220454f114",
   "address": "",
-  "privateKey": ""
+  "privateKey": "",
+  "infuraKey": "6330b77953574875a6f2ae220454f114",
+  "chain": "kovan"
 }
