@@ -2,5 +2,6 @@
   "address": "",
   "privateKey": "",
   "infuraKey": "6330b77953574875a6f2ae220454f114",
-  "chain": "kovan"
+  "chain": "kovan",
+  "port": 3000
 }

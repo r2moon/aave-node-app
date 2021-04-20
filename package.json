@@ -2,15 +2,17 @@
   "name": "app",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node main.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "ethereumjs-tx": "^2.1.2",
+    "express": "^4.17.1",
+    "socket.io": "^4.0.1",
     "web3": "1.3.3"
   }
 }

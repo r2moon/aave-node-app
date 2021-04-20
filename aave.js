@@ -242,62 +242,93 @@ async function getInterestInfo(token, chain = Constants.DEFAULT_CHAIN) {
   };
 }
 
-async function main() {
-  const reservesList = await getReservesList(Config.chain);
+async function approveAndDeposit(
+  account,
+  token,
+  spender,
+  value,
+  chain = Constants.DEFAULT_CHAIN
+) {
+  const approveTx = await approveToken(account, token, spender, value, chain);
 
-  /** Approve Dai for Aave Lending Pool to spend */
-  const approveTx = await approveToken(
-    {
-      address: Config.address,
-      privateKey: Config.privateKey,
-    },
-    reservesList[3],
-    Constants.AAVE.LendingPool[Config.chain],
-    "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-    Config.chain
-  );
+  await sleep(1000);
 
-  console.log(`\n Approve TxHash: ${approveTx.transactionHash} \n`);
-
-  /** Wait Lending Pool to update the status */
-  console.log("\n Waiting for 10 seconds... \n");
-  await sleep(10000);
-
-  /** Deposit 50 Dai to Aave Lending Pool */
   const depositTx = await depositToken(
-    {
-      address: Config.address,
-      privateKey: Config.privateKey,
-    },
-    reservesList[3],
-    Config.address,
-    "50000000000000000000",
-    Config.chain
+    account,
+    token,
+    account.address,
+    value,
+    chain
   );
 
-  console.log(`\n Deposit TxHash: ${depositTx.transactionHash} \n`);
-
-  /** Wait Lending Pool to update the status */
-  console.log("\n Waiting for 30 seconds... \n");
-  await sleep(30000);
-
-  /** Withdraw 30 Dai from Aave Lending Pool */
-  const withdrawTx = await withdrawToken(
-    {
-      address: Config.address,
-      privateKey: Config.privateKey,
-    },
-    reservesList[3],
-    Config.address,
-    "30000000000000000000",
-    Config.chain
-  );
-
-  console.log(`\n Withdraw TxHash: ${withdrawTx.transactionHash} \n`);
-
-  const interestInfo = await getInterestInfo(reservesList[9], Config.chain);
-  console.log(`\n Interest Information for ${reservesList[3]} \n`);
-  console.log(interestInfo);
+  return {
+    approveTxHash: approveTx.transactionHash,
+    depositTxHash: depositTx.transactionHash,
+  };
 }
 
-main();
+module.exports = {
+  getReservesList,
+  approveToken,
+  depositToken,
+  withdrawToken,
+  approveAndDeposit,
+};
+
+// async function main() {
+//   const reservesList = await getReservesList(Config.chain);
+
+//   /** Approve Dai for Aave Lending Pool to spend */
+//   const approveTx = await approveToken(
+//     {
+//       address: Config.address,
+//       privateKey: Config.privateKey,
+//     },
+//     reservesList[3],
+//     Constants.AAVE.LendingPool[Config.chain],
+//     "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+//     Config.chain
+//   );
+
+//   console.log(`\n Approve TxHash: ${approveTx.transactionHash} \n`);
+
+//   /** Wait Lending Pool to update the status */
+//   console.log("\n Waiting for 10 seconds... \n");
+//   await sleep(10000);
+
+//   /** Deposit 50 Dai to Aave Lending Pool */
+//   const depositTx = await depositToken(
+//     {
+//       address: Config.address,
+//       privateKey: Config.privateKey,
+//     },
+//     reservesList[3],
+//     Config.address,
+//     "50000000000000000000",
+//     Config.chain
+//   );
+
+//   console.log(`\n Deposit TxHash: ${depositTx.transactionHash} \n`);
+
+//   /** Wait Lending Pool to update the status */
+//   console.log("\n Waiting for 30 seconds... \n");
+//   await sleep(30000);
+
+//   /** Withdraw 30 Dai from Aave Lending Pool */
+//   const withdrawTx = await withdrawToken(
+//     {
+//       address: Config.address,
+//       privateKey: Config.privateKey,
+//     },
+//     reservesList[3],
+//     Config.address,
+//     "30000000000000000000",
+//     Config.chain
+//   );
+
+//   console.log(`\n Withdraw TxHash: ${withdrawTx.transactionHash} \n`);
+
+//   const interestInfo = await getInterestInfo(reservesList[9], Config.chain);
+//   console.log(`\n Interest Information for ${reservesList[3]} \n`);
+//   console.log(interestInfo);
+// }
